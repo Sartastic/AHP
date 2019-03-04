@@ -1,23 +1,20 @@
 import ahp as ahplib
+a1 = ahplib.ahp()
+a1.separatore()
+print("SIMPLE AHP TOOL\n")
+a1.separatore()
 
-print("Hello this is Mr. Decision Maker Man")
-print("We're gonna start reaaaaal simple: deciding between TWO things!\n")
-
-altcount = 2
+altcount = int(input("How many alternatives are you considering? "))
 alt = []
 for i in range(altcount):
-    alt.append(input("Name Alternative {}: ".format(i+1)))
+    alt.append(input("\tName Alternative {}: ".format(i+1)))
 
-print("\nOkay now how are we gonna rank these guys?  Come up with THREE criteria!")
-
-critcount = 3
+critcount = int(input("And how many criteria are you going to use to rank your alternatives? "))
 crit = []
 for i in range(critcount):
-    crit.append(input("Name Criteria {}: ".format(i+1)))
+    crit.append(input("\tName Criteria {}: ".format(i+1)))
 
-print("\ncool!!\n")
-print("Your alternatives are:\n\t", alt)
-print("Your criteria are:\n\t", crit)
+# print("Your alternatives are:\n\t", alt)
+# print("Your criteria are:\n\t", crit)
 
-a1 = ahplib.ahp()
 a1.esecuzione(alt,crit,[],[],grafico="no")

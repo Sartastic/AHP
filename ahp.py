@@ -8,12 +8,10 @@
 
     posizione in /home/ca/Dropbox/Dojo Python/AHP/    
     """
-# import unittest 
 import os
 import matplotlib.pyplot as plt
 import shutil
 import numpy as np
-# import ML
 
 HERE = os.path.dirname(os.path.realpath(__file__))
 
@@ -22,11 +20,6 @@ class ahp():
     def input(self, testo = "Scrivi l'input\n»"):
         s = []
         l = []
-        # while s != '###':
-        #     s = []
-        #     s = raw_input(testo)        # ottengo una stringa s con tutti gli elementi del primo nome
-        #     print(s)
-        #     l.append(s)          # separatore.join(s)  separatore.join(lista)
         return l[:-1]
     
     def smart_div(self, testo):
@@ -138,7 +131,7 @@ class ahp():
 
     def show_opz(self, cosa, testo): 
         """ mostro opzioni e criteri"""
-        print ('Estas' + testo)
+        print (testo)
         for i in cosa:
             print("\t # " + i)
         self.separatore()
@@ -180,21 +173,21 @@ class ahp():
                 if j == i: 
                     g_c[i][i] = 1
                 if j > i:
-                    testo = "Giudizio di", x[i], "rispetto a", x[j], ": ..." 
-                    g_c[i][j] = float(input(testo))         # lo giudico
+                    testo = "Judge \"" + x[i] + "\" with respect to " + x[j] + " [1/9 to 1 to 9] " 
+                    g_c[i][j] = float(self.smart_div(input(testo)))        # lo giudico
                     g_c[j][i] = 1./g_c[i][j]      # scrivo il valore trasposto
         #print (g_c)
         return g_c
 
     def show_confronto_criteri(self, crit, g_c): 
-        print ("Has juzgando la importancia de los criterios como sigue:")
+        print ("You judged the importance of the criteria as follows:")
         l = len(crit)
         for i in range(l):          # vale 0 --> 3
             for j in range(l):      # vale 0 --> 3
                 if j == i: 
                     pass
                 if j > i:
-                    print ('\t'+ str(crit[i]) +"\tcon respeto a \t" + str(crit[j]) + "\t: " + str(g_c[i][j]))
+                    print ('\t'+ str(crit[i]) +" with respect to " + str(crit[j]) + "\t: " + str(g_c[i][j]))
         self.separatore()
 
     def giudico_opzioni_in_base_ai_criteri(self, opz = ['o1', 'o2'], c = ['c1', 'c2', 'c3',] ):
@@ -205,19 +198,19 @@ class ahp():
         print(G)
         for j in range(len(G[0])):
             for i in range(len(G)):
-                frase = "come giudichi " + opz[i] + " secondo il criterio " + c[j] + "\n »"
+                frase = "How is " + opz[i] + " rated for the criteria " + c[j] + "? [1 - 10]\n »"
                 # print frase
-                G[i][j] = float(input(frase))  # 2    self.input(frase)
+                G[i][j] = float(self.smart_div(input(frase)))  # 2    self.input(frase)
         print (G)
         return G
 
     def show_giudizio_opz_su_crit(self, opz, crit, G):
         """mostro il giudizio """
-        print ("Has juzgando las alternativas segun los criterios como sigue:")
+        print ("You have judged the alternatives against the criteria as follows:")
 
         for j in range(len(G[0])):          # per tutti i criteri
             for i in range(len(G)):
-                print ('\t » Has juzgado ' + str(opz[i]) +'\t en función del criterio ' + str(crit[j]) + '\tcon un ' +  str(G[i][j]) )
+                print ('\t » You judged ' + str(opz[i]) +'\t against the criteria ' + str(crit[j]) + '\twith a ' +  str(G[i][j]) )
                 # print frase
         self.separatore()
 
@@ -257,26 +250,26 @@ class ahp():
                 b. moltiplico il giudizio G (normalizzato) per g_c
                 c. stampo il risultato  
         """
-        print ("El resultado de la elaboracion ha sido:")
+        print ("The result of the evaluation is:")
         g_c = self.giudizio_da_matrice(C)
 
         ris = []        # serve per il grafico
 
         R = G * g_c    # {2 · 3} {3·1}      = {2·1}
         for j in range(len(opz)):
-            print ("\tLa alternativa " + opz[j] + " tiene judicio global de {:6.4f}".format(float(R[[j], :])) )
+            print ("\tThe alternative " + opz[j] + " has a global score of {:6.4f}".format(float(R[[j], :])) )
             
             # ris.append([opz[j], float(R[[j], :]) )
             ris.append(float(R[[j], :]) )
         # self.separatore()
-        print ("La alternativa mejor ha resultado " + opz[ris.index(max(ris))] + " con un judicio de {:6.4f}".format(max(ris)) + ".")
+        print ("\nThe best alternative is " + opz[ris.index(max(ris))] + " with a score of {:6.4f}".format(max(ris)) + ".")
         
         if grafico == "yes":
             plt.bar(range(len(opz)), ris)
             plt.ylim(0,1.2*max(ris))
-            plt.title('Histograma del judicio con AHP')
-            plt.xlabel('Alternativas')
-            plt.ylabel('Evaluacion')    # si pianta con 'Evaluación'
+            plt.title('Histogram of AHP Scores')
+            plt.xlabel('Alternatives')
+            plt.ylabel('Scores')    # si pianta con 'Evaluación'
             plt.axhline(y=max(ris))     # http://matplotlib.org/examples/pylab_examples/axhspan_demo.html
             plt.xticks(range(len(opz)), opz, rotation=45)  # http://matplotlib.org/examples/ticks_and_spines/ticklabels_demo_rotation.html
             
@@ -306,16 +299,18 @@ class ahp():
                                 [0.5,.25, .2, 1]],
                     grafico = "no"):          # permetto di eseguire lo script 
         """ faccio chiedere i valori se lo richiamo come        """
+        self.separatore()
+
         if opz == []:               
             opz = self.in_opz()
         self.equiparo_lunghezze(opz)
-        testo_opz = 'juzgando la "mejor" entre estas alternativas (opciones):'
+        testo_opz = 'Your alternatives are:'
         self.show_opz(opz, testo_opz )
 
         if crit == []: 
             crit = self.in_crit()
         self.equiparo_lunghezze(crit)
-        testo_crit = 'utilizando estos criterios:'
+        testo_crit = 'Your criteria are:'
         self.show_opz(crit, testo_crit)
 
         # print "le opzioni sono", opz,"i criteri sono", crit 
@@ -334,11 +329,9 @@ class ahp():
         self.show_confronto_criteri(crit, g_c) 
 
         self.risultato(opz, crit, G, g_c, grafico = grafico)
+        self.separatore()
 
 # Esecuzione ========================================
 if __name__ == "__main__":
     a1 = ahp()
     a1.esecuzione(['Mars','Venus'],['Style','Je Ne Sais Quos','Gumption'],[],[],grafico="no")
-
-
-        
