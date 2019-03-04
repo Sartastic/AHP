@@ -17,14 +17,6 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.realpath(__file__))
 
-def fench_files(relative_path):   # relative path
-    # retrive files from a certain directory
-    # files = [f for f in os.listdir(HERE+"/"+relative_path) if path.isfile(f)]
-    files = [f for f in os.listdir(HERE+"/"+relative_path) \
-             if os.path.isfile(os.path.join(HERE +"/"+relative_path, f))]
-    print("Founded file/s: " + files + "\n")
-    return files
-
 class ahp():
 
     def input(self, testo = "Scrivi l'input\n»"):
@@ -37,10 +29,6 @@ class ahp():
         #     l.append(s)          # separatore.join(s)  separatore.join(lista)
         return l[:-1]
     
-    def stop(self):
-        # raw_input("»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»»\n\n")
-        pass
-
     def smart_div(self, testo):
         # allow text value to have this form 1/2,
         # with the result of float(smart_div("1/2"))= 0.5
@@ -49,39 +37,6 @@ class ahp():
             return int(b[0]) / float(b[1])
         else:
             return testo
-
-    def remove_CC(self, case):
-        due = case.split("_CC")                                                                                                                                                                                                                                                                                                                                                             
-        return ("").join(due)
- 
-    def prepara_file(self, nome_file):
-        """ inside choices"""
-        H = HERE +'/choices/'
-        new_name = self.remove_CC(nome_file)
-        shutil.copy2( H + nome_file, H + new_name)
-        
-        # with open(HERE +'/choices/' + new_name, a):
-
-        a = self.inpt_from_file(nome_file)
-        self.equiparo_lunghezze( a[0]) 
-        self.equiparo_lunghezze( a[1])
-        with open( H + new_name, 'a') as f: 
-            f.write('\n[:giud:]        solo da 0 a 10 \n')
-            for i in a[1]: 
-                f.write('\t\t'+ i + "\t\t# \n")
-                for j in a[0]: 
-                    f.write('\t' + j + '\t\t-->          --> \n' )
-            f.write('[/:giud:] \n')
-
-            f.write('\n[:g_c:]        from 1/10 to 10 rate the left lower criterio against the upper right   \n')
-            l = a[1]
-            while len(l) > 1 :
-                temp = l[0]
-                l.pop(0)
-                for i in l:
-                    f.write( '\t\t\t' + i + '\n') 
-                    f.write('\t' + temp + '\t\t -->            -->\n') 
-            f.write('[/:g_c:] \n')
 
     def che_riga(self, numero, giud = ["a","b","c","e","f","g"],):
         # for a number, return the position (row and column) in a 
@@ -161,84 +116,6 @@ class ahp():
         """
         # # print "Third version of the matrix:\n", matrice
         return matrice
-
-    def inpt_from_file(self, nombre, c="/choices/"):
-        """ read variables from a file in a choice_all directory """
-        variabili = [] 
-        opz_lines, crit_lines, giud_lines , g_c_lines = [], [], [], []     
-        opz_ok, crit_ok, giud_ok, g_c_ok = False, False, False, False 
-        with open( HERE+ c + nombre, 'r') as data:
-            lines = [line for line in data.readlines()]  
-            for i in lines:
-                if i[:7] == "[:opz:]":
-                    opz_ok = True
-                if i[:8] == "[/:opz:]":
-                    opz_ok = False
-                if opz_ok:
-                    opz_lines.append(i)
-
-                if i[:8] == "[:crit:]":
-                    crit_ok = True
-                if i[:9] == "[/:crit:]":
-                    crit_ok = False
-                if crit_ok:
-                    crit_lines.append(i)
-
-                if i[:8] == "[:giud:]":
-                    giud_ok = True
-                if i[:9] == "[/:giud:]":
-                    giud_ok = False
-                if giud_ok:
-                    giud_lines.append(i)
-
-                if i[:7] == "[:g_c:]":
-                    g_c_ok = True
-                if i[:8] == "[/:g_c:]":
-                    g_c_ok = False
-                if g_c_ok:
-                    g_c_lines.append(i)
-
-                    
-        # # # print opz_lines, "\n", crit_lines, "\n", giud_lines  # ok
-
-        opz_clean = []
-        for testo in opz_lines:
-            if testo[:7] != "[:opz:]":
-                opz_clean.append(testo.split("#")[0].strip())
-        """    
-        # print len(opz_clean), opz_clean """
-        variabili.append(opz_clean)
-        # print variabili
-        
-        crit_clean = []
-        for testo in crit_lines:
-            if testo[:8] != "[:crit:]":     
-                crit_clean.append(testo.split("#")[0].strip())  
-        variabili.append(crit_clean)
-
-        giud_clean = []
-        for testo in giud_lines:
-            if testo[:8] != "[:giud:]":
-                if "-->" in testo:
-                    giud_clean.append(testo.split("-->")[1].strip())  # was int()
-        # print giud_clean
-        variabili.append(self.gira_matrice(variabili[0], giud_clean))
-
-        # HERE!!!
-        g_c_clean = []
-        for testo in g_c_lines:
-            if testo[:7] != "[:g_c:]":
-                if "-->" in testo:
-                    g_c_clean.append(testo.split("-->")[1].strip())
-        """    
-        # print len(opz_clean), opz_clean """
-        variabili.append(self.componi_matrice(crit_clean, g_c_clean))
-
-        # print variabili
-        # print g_c_clean
-
-        # print variabili
-        return variabili    
 
     def equiparo_lunghezze(self, lista):
         """max(mylist, key=len)"""
@@ -434,14 +311,12 @@ class ahp():
         self.equiparo_lunghezze(opz)
         testo_opz = 'juzgando la "mejor" entre estas alternativas (opciones):'
         self.show_opz(opz, testo_opz )
-        # self.stop()()
 
         if crit == []: 
             crit = self.in_crit()
         self.equiparo_lunghezze(crit)
         testo_crit = 'utilizando estos criterios:'
         self.show_opz(crit, testo_crit)
-        # self.stop()()
 
         # print "le opzioni sono", opz,"i criteri sono", crit 
         """ ora che ho raccolto i criteri e le opzioni, 
@@ -452,35 +327,18 @@ class ahp():
         if G == []:
             G = self.giudico_opzioni_in_base_ai_criteri(opz, crit)
         self.show_giudizio_opz_su_crit(opz, crit, G)
-        # self.stop()()
 
         # b. 
         if  g_c == []:
             g_c = self.confronto_criteri(crit)    
         self.show_confronto_criteri(crit, g_c) 
-        # self.stop()()
 
         self.risultato(opz, crit, G, g_c, grafico = grafico)
-        # # self.stop()()
-
-        # return 
 
 # Esecuzione ========================================
 if __name__ == "__main__":
     a1 = ahp()
     a1.esecuzione(['Mars','Venus'],['Style','Je Ne Sais Quos','Gumption'],[],[],grafico="no")
-    #a1.risultato(grafico="no")
-    # for case in fench_files("choices"):
-    #     # print case
-    #     # print type(case)
-    #     if not("_CC" in case):
-    #         v = a1.inpt_from_file(case)
-    #         a1.esecuzione(v[0], v[1], v[2], v[3], grafico = "yes")
-    #     else:
-    #         # print "c'è un _CC !!"
-    #         a1.prepara_file( case )
-    #         # prepare file
-
 
 
         
