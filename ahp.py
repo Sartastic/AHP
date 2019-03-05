@@ -127,7 +127,7 @@ class ahp():
         return opz
 
     def separatore(self):
-        print ('_'*65 + '\n\n')
+        print ('_'*65 + '\n')
 
     def show_opz(self, cosa, testo): 
         """ mostro opzioni e criteri"""
@@ -173,10 +173,10 @@ class ahp():
                 if j == i: 
                     g_c[i][i] = 1
                 if j > i:
-                    testo = "Judge \"" + x[i] + "\" with respect to " + x[j] + " [1/9 to 1 to 9] " 
+                    testo = "Judge " + x[i] + " with respect to " + x[j] + " [1/9 to 1 to 9] » " 
                     g_c[i][j] = float(self.smart_div(input(testo)))        # lo giudico
                     g_c[j][i] = 1./g_c[i][j]      # scrivo il valore trasposto
-        #print (g_c)
+        print()
         return g_c
 
     def show_confronto_criteri(self, crit, g_c): 
@@ -195,13 +195,11 @@ class ahp():
         v = []
         for j in range(len(opz)):       # per tutte le opzioni, creo una lista di zero
             G.append([0] * len(c))      
-        print(G)
         for j in range(len(G[0])):
             for i in range(len(G)):
-                frase = "How is " + opz[i] + " rated for the criteria " + c[j] + "? [1 - 10]\n »"
-                # print frase
+                frase = "How is " + opz[i] + " rated for the criteria " + c[j] + "? [1 - 10] » "
                 G[i][j] = float(self.smart_div(input(frase)))  # 2    self.input(frase)
-        print (G)
+        print() #print (G)
         return G
 
     def show_giudizio_opz_su_crit(self, opz, crit, G):
@@ -215,9 +213,10 @@ class ahp():
         self.separatore()
 
         # stampo la matrice dei giudizi
-        intestazione = "\t\t" + crit[0]
+        intestazione = "\t\t" + crit[0] + "\t\t"
         for j in range(1, len(G[0])):          # per tutti i criteri
             intestazione += crit[j] 
+            intestazione += "\t\t"
 
         print (intestazione)
         
@@ -254,15 +253,19 @@ class ahp():
         g_c = self.giudizio_da_matrice(C)
 
         ris = []        # serve per il grafico
+        percents = []
 
         R = G * g_c    # {2 · 3} {3·1}      = {2·1}
         for j in range(len(opz)):
-            print ("\tThe alternative " + opz[j] + " has a global score of {:6.4f}".format(float(R[[j], :])) )
+            total = sum(R)
+            percent = (float(R[[j], :])/total)*100
+            print ("\tThe alternative " + opz[j] + " has a global score of {:6.4f}".format(float(R[[j], :])) + " and percent {:6.2f}".format(float(percent)))
             
             # ris.append([opz[j], float(R[[j], :]) )
             ris.append(float(R[[j], :]) )
+            percents.append(float(percent))
         # self.separatore()
-        print ("\nThe best alternative is " + opz[ris.index(max(ris))] + " with a score of {:6.4f}".format(max(ris)) + ".")
+        print ("\nThe best alternative is " + opz[ris.index(max(ris))] + " with a score of {:6.4f}".format(max(ris)) +  " and percent {:6.2f}".format(float(max(percents))) + ".")
         
         if grafico == "yes":
             plt.bar(range(len(opz)), ris)

@@ -1,7 +1,7 @@
 import ahp as ahplib
 a1 = ahplib.ahp()
 a1.separatore()
-print("SIMPLE AHP TOOL\n")
+print("SIMPLE AHP TOOL")
 a1.separatore()
 
 altcount = int(input("How many alternatives are you considering? "))
