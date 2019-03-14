@@ -173,7 +173,7 @@ class ahp():
                 if j == i: 
                     g_c[i][i] = 1
                 if j > i:
-                    testo = "Judge \"" + x[i] + "\" with respect to " + x[j] + " [1/9 to 1 to 9] " 
+                    testo = "Judge " + x[i] + " with respect to " + x[j] + " [1/9 to 1 to 9] " 
                     g_c[i][j] = float(self.smart_div(input(testo)))        # lo giudico
                     g_c[j][i] = 1./g_c[i][j]      # scrivo il valore trasposto
         #print (g_c)
