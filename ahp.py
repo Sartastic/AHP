@@ -18,7 +18,6 @@ HERE = os.path.dirname(os.path.realpath(__file__))
 class ahp():
 
     def input(self, testo = "Scrivi l'input\n»"):
-        s = []
         l = []
         return l[:-1]
     
@@ -64,7 +63,7 @@ class ahp():
         # from a list of string values a list of float
 
         # print sum([int(j) for j in li])
-        max_ = len(li)/len(opz)
+        # max_ = len(li)/len(opz)
         # print max_
         varie = []
         for a in range(len(opz)):
@@ -143,8 +142,8 @@ class ahp():
         crit = self.input(testo)
         return crit
 
-        """ a questo punto devo confrontare e pesare, opzioni fra di loro, criteri fra di loro, 
-            attribuire i criteri alle opzioni e calcolare il risultato """
+        # """ a questo punto devo confrontare e pesare, opzioni fra di loro, criteri fra di loro, 
+        #     attribuire i criteri alle opzioni e calcolare il risultato """
 
     def normalizzazione(self, values, x_min, x_max, tipo = "linear"):
         """lineare or Square or Square Root 
@@ -192,7 +191,6 @@ class ahp():
 
     def giudico_opzioni_in_base_ai_criteri(self, opz = ['o1', 'o2'], c = ['c1', 'c2', 'c3',] ):
         G = []
-        v = []
         for j in range(len(opz)):       # per tutte le opzioni, creo una lista di zero
             G.append([0] * len(c))      
         print(G)
