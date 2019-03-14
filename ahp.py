@@ -250,9 +250,15 @@ class ahp():
                 b. moltiplico il giudizio G (normalizzato) per g_c
                 c. stampo il risultato  
         """
-        print ("The result of the evaluation is:")
         g_c = self.giudizio_da_matrice(C)
+        
+        print("The criteria weightings are:")
+        for i in range(len(c)):
+            print("\t" + str(c[i]) + "\t{:6.2f}".format(float(g_c[[i], :])))
+        print()
+        self.separatore()
 
+        print ("The result of the evaluation is:")
         ris = []        # serve per il grafico
 
         R = G * g_c    # {2 · 3} {3·1}      = {2·1}
